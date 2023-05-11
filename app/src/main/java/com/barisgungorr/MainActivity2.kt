@@ -2,6 +2,8 @@ package com.barisgungorr
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import com.barisgungorr.polatcatch.R
@@ -13,6 +15,8 @@ class MainActivity2 : AppCompatActivity() {
     private lateinit var binding: ActivityMain2Binding
     var score = 0 // bu skora başka fonksiyonlardan da ulaşmak isteyebilirim
     var imageArray = ArrayList<ImageView>() // ImageViewlerimi eklemek için bir arrayList oluşturduk
+    var runnable = Runnable {}
+    var handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +33,7 @@ class MainActivity2 : AppCompatActivity() {
         imageArray.add(binding.imageView7)
         imageArray.add(binding.imageView8)
         imageArray.add(binding.imageView9)
+        hideImages()
 
     }
     fun increaseScore(view: View) {  // we added our func that will increase the every time we click on the photo
@@ -36,12 +41,23 @@ class MainActivity2 : AppCompatActivity() {
         binding.textViewScore.text = "Score: ${score}"
     }
     fun hideImages(){
-    for(image in imageArray) {
-        image.visibility = View.INVISIBLE  // görselleri kaybettik
-    }
-        val random = Random()
-        val randomIndex = random.nextInt(9) // 0'dan 9 a kadar random bir ımageVıew açılacak uygulamayı her açtığımızda
-        imageArray[randomIndex].visibility = View.VISIBLE
+        runnable = object : Runnable {  // bu objenin içinde yazdıklarımızı devamlı çalıştırabiliyoruz
+            override fun run() {
+                for(image in imageArray) {
+                    image.visibility = View.INVISIBLE  // görselleri kaybettik
+                }
+                val random = Random()
+                val randomIndex = random.nextInt(9) // 0'dan 9 a kadar random bir ımageVıew açılacak uygulamayı her açtığımızda
+                imageArray[randomIndex].visibility = View.VISIBLE
+                handler.postDelayed(runnable,500)
+
+
+            }
+
+
+        }
+            handler.post(runnable)
+
 
 
     }
