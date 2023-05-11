@@ -1,11 +1,15 @@
 package com.barisgungorr
 
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.barisgungorr.polatcatch.R
 import com.barisgungorr.polatcatch.databinding.ActivityMain2Binding
 import com.barisgungorr.polatcatch.databinding.ActivityMainBinding
@@ -34,6 +38,32 @@ class MainActivity2 : AppCompatActivity() {
         imageArray.add(binding.imageView8)
         imageArray.add(binding.imageView9)
         hideImages()
+
+        object : CountDownTimer(30000,1000) {
+            override fun onTick(p0: Long) {
+                binding.textViewTime.text = "Time: ${p0 / 1000}"
+            }
+
+            override fun onFinish() {
+                binding.textViewTime.text = "Time Out !"
+                handler.removeCallbacks(runnable) // süre bitince durdurduk
+
+                for (image in imageArray) { // son kalan ımageyı de kaldırdık
+                    image.visibility = View.INVISIBLE
+                }
+                val alert = AlertDialog.Builder(this@MainActivity2)
+                alert.setTitle("Game over!")
+                alert.setMessage("Restart ?")
+                alert.setPositiveButton("Yes",DialogInterface.OnClickListener{dialogInterface, i ->
+                                    //restart
+                })
+                alert.setNegativeButton("No",DialogInterface.OnClickListener{dialogInterface, i ->
+                    Toast.makeText(this@MainActivity2,"Game Over",Toast.LENGTH_LONG).show()
+                })
+                alert.show()
+            }
+        }.start()
+
 
     }
     fun increaseScore(view: View) {  // we added our func that will increase the every time we click on the photo
