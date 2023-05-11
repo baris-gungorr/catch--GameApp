@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     }
     fun change(view: View) {
     val intent = Intent(this@MainActivity,MainActivity2::class.java)
+
         startActivity(intent)
         finish()
 
